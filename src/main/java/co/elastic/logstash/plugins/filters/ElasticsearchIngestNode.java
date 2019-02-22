@@ -6,7 +6,9 @@ import co.elastic.logstash.api.Event;
 import co.elastic.logstash.api.EventFactory;
 import co.elastic.logstash.api.Filter;
 import co.elastic.logstash.api.FilterMatchListener;
+import co.elastic.logstash.api.LogstashPlugin;
 import co.elastic.logstash.api.PluginConfigSpec;
+import co.elastic.logstash.api.PluginHelper;
 import com.google.common.annotations.VisibleForTesting;
 import org.elasticsearch.common.bytes.BytesArray;
 import org.elasticsearch.common.bytes.BytesReference;
@@ -31,9 +33,11 @@ import org.elasticsearch.script.mustache.MustacheScriptEngine;
 import org.elasticsearch.threadpool.ThreadPool;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,7 +48,8 @@ import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
 import java.util.function.BiFunction;
 
-public class IngestNodeFilter implements Filter, PipelineProvider {
+@LogstashPlugin(name = "elasticsearch_ingest_node")
+public class ElasticsearchIngestNode implements Filter, PipelineProvider {
 
     public static final PluginConfigSpec<String> NODE_NAME =
             PluginConfigSpec.stringSetting("node_name");
@@ -52,28 +57,33 @@ public class IngestNodeFilter implements Filter, PipelineProvider {
             PluginConfigSpec.stringSetting("watchdog_interval");
     public static final PluginConfigSpec<String> WATCHDOG_MAX_TIME =
             PluginConfigSpec.stringSetting("watchdog_max_time");
+    public static final PluginConfigSpec<String> PIPELINE_DEFINITIONS =
+            PluginConfigSpec.requiredStringSetting("pipeline_definitions");
+    public static final PluginConfigSpec<String> PRIMARY_PIPELINE =
+            PluginConfigSpec.stringSetting("primary_pipeline");
 
-    static final String PIPELINE_DEFINITIONS = "pipeline_definitions";
-    static final String PRIMARY_PIPELINE = "primary_pipeline";
-
+    private String id;
     private String nodeName;
     private Map<String, Pipeline> pipelines;
     private Pipeline primaryPipeline;
     private EventFactory eventFactory;
 
-    public IngestNodeFilter(Configuration config, Context context) {
-        //this.sourceField = config.get(SOURCE_CONFIG);
-        this.eventFactory = context.getEventFactory();
-        this.nodeName = config.get(NODE_NAME) == null ? UUID.randomUUID().toString() : config.get(NODE_NAME);
-    }
-
-    public IngestNodeFilter(Map<String, Object> settings) throws IOException {
-        this(new FileInputStream((String)settings.get(PIPELINE_DEFINITIONS)), (String)settings.get(PRIMARY_PIPELINE), null);
+    public ElasticsearchIngestNode(String id, Configuration config, Context context) {
+        this(id, config, context, toFileInputStream(config.get(PIPELINE_DEFINITIONS)));
     }
 
     @VisibleForTesting
-    IngestNodeFilter(InputStream pipelineDefinitions, String primaryPipelineName, Context context) throws IOException {
-        List<IngestNodePipeline> ingestNodePipelines = IngestNodePipeline.createFrom(pipelineDefinitions);
+    ElasticsearchIngestNode(String id, Configuration config, Context context, InputStream pipelineDefinitions) {
+        this.id = id;
+        this.eventFactory = context.getEventFactory();
+        this.nodeName = config.get(NODE_NAME) == null ? UUID.randomUUID().toString() : config.get(NODE_NAME);
+        String primaryPipelineName = config.get(PRIMARY_PIPELINE);
+        List<IngestNodePipeline> ingestNodePipelines;
+        try {
+            ingestNodePipelines = IngestNodePipeline.createFrom(pipelineDefinitions);
+        } catch (IOException ex) {
+            throw new IllegalStateException("Error creating ingest node filter", ex);
+        }
 
         if (ingestNodePipelines.size() == 0) {
             throw new IllegalStateException("No pipeline definitions found");
@@ -92,11 +102,6 @@ public class IngestNodeFilter implements Filter, PipelineProvider {
             throw new IllegalStateException(
                     String.format("Could not find primary pipeline '%s'", resolvedPrimaryPipelineName));
         }
-
-        if (context != null) {
-            this.eventFactory = context.getEventFactory();
-        }
-
     }
 
     @Override
@@ -203,11 +208,20 @@ public class IngestNodeFilter implements Filter, PipelineProvider {
 
     @Override
     public Collection<PluginConfigSpec<?>> configSchema() {
-        return Collections.singletonList(NODE_NAME);
+        return PluginHelper.commonFilterSettings(Arrays.asList(NODE_NAME, WATCHDOG_INTERVAL, WATCHDOG_MAX_TIME,
+                PIPELINE_DEFINITIONS, PRIMARY_PIPELINE));
     }
 
     @Override
     public String getId() {
-        return null;
+        return id;
+    }
+
+    private static FileInputStream toFileInputStream(String filename) {
+        try {
+            return new FileInputStream(filename);
+        } catch (FileNotFoundException ex) {
+            throw new IllegalArgumentException("Unable to open file '" + filename + "'", ex);
+        }
     }
 }
