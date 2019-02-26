@@ -12,6 +12,8 @@ version "${new File("VERSION").text.trim()}"
 
 description = "Elasticsearch ingest node filter"
 
+String elasticsearchVersion = "6.7.0-SNAPSHOT"
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -41,27 +43,30 @@ shadowJar {
 }
 
 dependencies {
-    compile 'org.elasticsearch:elasticsearch:6.5.0'
-    compile 'org.elasticsearch:elasticsearch-core:6.5.0'
-    compile 'org.elasticsearch:elasticsearch-x-content:6.5.0'
-    compile 'org.apache.lucene:lucene-core:7.5.0'
-    compile 'org.codelibs.elasticsearch.module:ingest-common:6.5.0'
-    compile 'org.codelibs.elasticsearch.module:lang-painless:6.5.0'
-    compile 'org.codelibs.elasticsearch.module:lang-mustache:6.5.0'
+    compile fileTree(dir: 'local_libs', include: '*.jar')
+    /*
+    compile "org.elasticsearch:elasticsearch:${elasticsearchVersion}"
+    compile "org.elasticsearch:elasticsearch-core:${elasticsearchVersion}"
+    compile "org.elasticsearch:elasticsearch-x-content:${elasticsearchVersion}"
+    compile "org.codelibs.elasticsearch.module:ingest-common:${elasticsearchVersion}"
+    compile "org.codelibs.elasticsearch.module:lang-painless:${elasticsearchVersion}"
+    compile "org.codelibs.elasticsearch.module:lang-mustache:${elasticsearchVersion}"
 
-    compile 'org.elasticsearch.plugin:elasticsearch-scripting-painless-spi:6.5.0'
-    compile 'org.antlr:antlr4-runtime:4.5.3'
-    compile 'org.codelibs.elasticsearch.lib:grok:6.5.0'
-
+    compile "org.elasticsearch.plugin:elasticsearch-scripting-painless-spi:${elasticsearchVersion}"
+    compile "org.codelibs.elasticsearch.lib:grok:${elasticsearchVersion}"
+    */
+    compile "org.apache.lucene:lucene-core:7.7.0"
+    compile "org.antlr:antlr4-runtime:4.5.3"
 
     compile 'org.apache.commons:commons-lang3:3.7'
     compile 'org.apache.logging.log4j:log4j-api:2.9.1'
     compile 'org.apache.logging.log4j:log4j-core:2.9.1'
     compile fileTree(dir: LOGSTASH_CORE_PATH, include: "**/logstash-core-?.?.?.jar")
 
-    compile "com.fasterxml.jackson.core:jackson-core:2.9.5"
-    compile "com.fasterxml.jackson.core:jackson-databind:2.9.5"
-    compile "com.fasterxml.jackson.core:jackson-annotations:2.9.5"
+    compile "com.fasterxml.jackson.core:jackson-core:2.9.8"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.9.8"
+    compile "com.fasterxml.jackson.core:jackson-annotations:2.9.8"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.8"
     compile group: 'com.google.guava', name: 'guava', version: '22.0'
 
     testCompile 'junit:junit:4.12'

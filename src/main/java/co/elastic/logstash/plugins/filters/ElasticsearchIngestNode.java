@@ -21,6 +21,8 @@ import org.elasticsearch.ingest.IngestDocument;
 import org.elasticsearch.ingest.Pipeline;
 import org.elasticsearch.ingest.Processor;
 import org.elasticsearch.ingest.common.IngestCommonPlugin;
+import org.elasticsearch.ingest.geoip.IngestGeoIpPlugin;
+import org.elasticsearch.ingest.useragent.IngestUserAgentPlugin;
 import org.elasticsearch.painless.PainlessScriptEngine;
 import org.elasticsearch.painless.spi.Whitelist;
 import org.elasticsearch.script.IngestConditionalScript;
@@ -163,10 +165,16 @@ public class ElasticsearchIngestNode implements Filter, PipelineProvider {
     }
 
     private Map<String, Processor.Factory> getProcessorFactories() {
+        Processor.Parameters processorParameters = getParameters();
         IngestCommonPlugin ingestCommonPlugin = new IngestCommonPlugin();
-        Map<String, Processor.Factory> defaultFactories = ingestCommonPlugin.getProcessors(getParameters());
+        Map<String, Processor.Factory> defaultFactories = ingestCommonPlugin.getProcessors(processorParameters);
+        Map<String, Processor.Factory> userAgentFactory = new IngestUserAgentPlugin().getProcessors(processorParameters);
+        Map<String, Processor.Factory> geoipFactory = new IngestGeoIpPlugin().getProcessors(processorParameters);
         Map<String, Processor.Factory> overriddenFactories = new HashMap<>(defaultFactories);
+        overriddenFactories.putAll(userAgentFactory);
+        overriddenFactories.putAll(geoipFactory);
         overriddenFactories.put(PipelineProcessor.TYPE, new PipelineProcessor.Factory(this));
+        overriddenFactories.put(SetSecurityUserProcessor.TYPE, new SetSecurityUserProcessor.Factory());
         return Collections.unmodifiableMap(overriddenFactories);
     }
 
@@ -185,6 +193,7 @@ public class ElasticsearchIngestNode implements Filter, PipelineProvider {
                 .put("node.name", nodeName)
                 .put("ingest.grok.watchdog.interval", "1s")
                 .put("ingest.grok.watchdog.max_execution_time", "1s")
+                .put("ingest.geoip.database_path", "local_libs")
                 .build();
     }
 

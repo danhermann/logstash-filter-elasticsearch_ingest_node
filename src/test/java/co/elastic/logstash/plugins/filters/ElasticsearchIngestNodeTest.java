@@ -312,8 +312,32 @@ public class ElasticsearchIngestNodeTest {
     }
 
     @Test
-    public void testGrokProcessor() throws Exception {
+    public void testGeoIpProcessor() throws Exception {
+        String json =
+                "{ \"my_pipeline\" : {" +
+                        "    \"processors\": [" +
+                        "      {" +
+                        "        \"geoip\": {" +
+                        "          \"field\": \"ip\"" +
+                        "        }" +
+                        "      }" +
+                        "    ]" +
+                        "  }}";
+        ElasticsearchIngestNode ingestNodeFilter = getFilter(
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
 
+        String ip = "8.8.8.8";
+        Event e1 = new org.logstash.Event();
+        e1.setField("ip", ip);
+        Event e2 = assertSingleEvent(ingestNodeFilter.filter(Collections.singleton(e1), new TestFilterMatchListener()));
+        Assert.assertEquals("North America", e2.getField("[geoip][continent_name]"));
+        Assert.assertEquals("US", e2.getField("[geoip][country_iso_code]"));
+        Assert.assertEquals(37.751, e2.getField("[geoip][location][lat]"));
+        Assert.assertEquals(-97.822, e2.getField("[geoip][location][lon]"));
+    }
+
+    @Test
+    public void testGrokProcessor() throws Exception {
         String json =
 
                 "{ \"my_pipeline\" : {" +
@@ -693,33 +717,6 @@ public class ElasticsearchIngestNodeTest {
         Assert.assertEquals(10L, e2.getField("painlessValue"));
     }
 
-/*
-    @Test
-    public void testSetSecurityUserProcessor() throws Exception {
-
-        String json =
-
-                "{ \"my_pipeline\" : {" +
-                        "    \"processors\": [" +
-                        "      {" +
-                        "        \"set_security_user\": {" +
-                        "          \"field\": \"user\"" +
-                        "        }" +
-                        "      }" +
-                        "    ]" +
-                        "  }}";
-        ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline");
-
-        Event e1 = new Event();
-        e1.setField("my_field1", "foo");
-        e1.setField("my_field2", "foo");
-        Event e2 = assertSingleEvent(ingestNodeFilter.filter(Collections.singleton(e1), new TestFilterMatchListener()));
-        compareEventsExcludingFields(e1, e2, new String[]{"my_field1"});
-        Assert.assertEquals(3.1415, e2.getField("my_field1"));
-    }
-*/
-
     @Test
     public void testSetProcessor() throws Exception {
 
@@ -744,6 +741,28 @@ public class ElasticsearchIngestNodeTest {
         Event e2 = assertSingleEvent(ingestNodeFilter.filter(Collections.singleton(e1), new TestFilterMatchListener()));
         compareEventsExcludingFields(e1, e2, new String[]{"my_field1"});
         Assert.assertEquals(3.1415, e2.getField("my_field1"));
+    }
+
+    @Test
+    public void testSetSecurityUserProcessor() throws Exception {
+        String json =
+                "{ \"my_pipeline\" : {" +
+                        "    \"processors\": [" +
+                        "      {" +
+                        "        \"set_security_user\": {" +
+                        "          \"field\": \"user\"" +
+                        "        }" +
+                        "      }" +
+                        "    ]" +
+                        "  }}";
+        ElasticsearchIngestNode ingestNodeFilter = getFilter(
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+
+        Event e1 = new org.logstash.Event();
+        e1.setField("user", "foo");
+        e1.setField("my_field2", "foo");
+        Event e2 = assertSingleEvent(ingestNodeFilter.filter(Collections.singleton(e1), new TestFilterMatchListener()));
+        compareEventsExcludingFields(e1, e2, new String[]{});
     }
 
     @Test
@@ -880,6 +899,37 @@ public class ElasticsearchIngestNodeTest {
         Event e2 = assertSingleEvent(ingestNodeFilter.filter(Collections.singleton(e1), new TestFilterMatchListener()));
         compareEventsExcludingFields(e1, e2, new String[]{"my_field2"});
         Assert.assertEquals(expectedUrl, e2.getField("my_field2"));
+    }
+
+    @Test
+    public void testUserAgentProcessor() throws Exception {
+        String json =
+
+                "{ \"my_pipeline\" : {" +
+                        "    \"processors\": [" +
+                        "      {" +
+                        "        \"user_agent\": {" +
+                        "          \"field\": \"agent\"," +
+                        "          \"ecs\": true" +
+                        "        }" +
+                        "      }" +
+                        "    ]" +
+                        "  }}";
+        ElasticsearchIngestNode ingestNodeFilter = getFilter(
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+
+        String agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36";
+        Event e1 = new org.logstash.Event();
+        e1.setField("agent", agent);
+        Event e2 = assertSingleEvent(ingestNodeFilter.filter(Collections.singleton(e1), new TestFilterMatchListener()));
+        compareEventsExcludingFields(e1, e2, new String[]{"user_agent"});
+        Assert.assertEquals("Chrome", e2.getField("[user_agent][name]"));
+        Assert.assertEquals(agent, e2.getField("[user_agent][original]"));
+        Assert.assertEquals("51.0.2704", e2.getField("[user_agent][version]"));
+        Assert.assertEquals("Mac OS X", e2.getField("[user_agent][os][name]"));
+        Assert.assertEquals("10.10.5", e2.getField("[user_agent][os][version]"));
+        Assert.assertEquals("Mac OS X 10.10.5", e2.getField("[user_agent][os][full]"));
+        Assert.assertEquals("Other", e2.getField("[user_agent][device][name]"));
     }
 
     @Test
