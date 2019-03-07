@@ -3,8 +3,9 @@
 
 ### Description
 
-Execute arbitrary Elasticsearch ingest node pipelines on Logstash events. The format for the ingest node pipeline 
-definition is the [same one used by Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/pipeline.html).
+Execute arbitrary [Elasticsearch ingest node](https://www.elastic.co/guide/en/elasticsearch/reference/current/ingest.html)
+pipelines on Logstash events. The format for the ingest node pipeline definition is the [same one used by 
+Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/pipeline.html).
 
 In the example below, two ingest pipelines would be defined, the `set_and_lower` pipeline that sets the `my_field1` 
 field on Logstash events to `FOO BAR BAZ` and then copies the lowercase value of that field to a field named 
@@ -51,7 +52,8 @@ Possible motivations for running Elasticsearch ingest node pipelines in Logstash
 
 * Enabling users to off-load processor-intensive or high-latency enrichment pipelines from Elasticsearch to Logstash.
 * If users have existing Elasticsearch ingest pipelines for which they have new requirements that cannot be fulfilled
-in Elasticsearch (e.g., external lookup enrichment, multiple outputs), the existing pipeline could be moved to LS and the additional functionality added within the LS pipeline.
+in Elasticsearch (e.g., external lookup enrichment, multiple outputs), the existing pipeline could be moved to Logstash
+and the additional functionality added within the Logstash pipeline.
 
 ### Elasticsearch Ingest Node Filter Configuration Options
 
