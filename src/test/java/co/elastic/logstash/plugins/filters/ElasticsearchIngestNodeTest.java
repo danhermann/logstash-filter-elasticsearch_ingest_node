@@ -49,7 +49,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         e1.setField("my_field", "my_value1");
@@ -79,7 +79,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         e1.setField("my_field", "1kb");
@@ -105,7 +105,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         e1.setField("my_field", "1024");
@@ -131,7 +131,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         e1.setField("my_field", "08/14/1991 13:45:55");
@@ -160,7 +160,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         e1.setField("my_field", "08/14/1991 13:45:55");
@@ -186,7 +186,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         String rawLogLine = "1.2.3.4 - - [30/Apr/1998:22:00:52 +0000] \"GET /english/venues/cities/images/montpellier/18.gif HTTP/1.0\" 200 3171";
         Event e1 = new org.logstash.Event();
@@ -219,7 +219,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         e1.setField("my_field1.my_field2", "foo");
@@ -242,7 +242,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         e1.setField("my_field1", "foo");
@@ -266,7 +266,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         try {
             ingestNodeFilter.filter(Collections.singleton(new org.logstash.Event()), new TestFilterMatchListener());
@@ -300,7 +300,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         List<String> strings = new ArrayList<>(Arrays.asList("FOO", "BAR", "BAZ"));
@@ -324,7 +324,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         String ip = "8.8.8.8";
         Event e1 = new org.logstash.Event();
@@ -351,7 +351,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         e1.setField("my_field", "3.44 55.3.244.1");
@@ -377,7 +377,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         e1.setField("my_field", "Bonsuche mit folgender Anfrage: Belegart->[EINGESCHRAENKTER_VERKAUF, VERKAUF, NACHERFASSUNG] Zustand->ABGESCHLOSSEN Kassennummer->2 Bonnummer->6362 Datum->Mon Jan 08 00:00:00 UTC 2018");
@@ -411,7 +411,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         String value = "800.555.1234";
@@ -438,7 +438,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         List<String> strings = new ArrayList<>(Arrays.asList("FOO", "BAR", "BAZ"));
@@ -465,7 +465,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         String myRawJson = "{\"foo\": 2000}";
@@ -492,7 +492,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         String myRawKv = "ip=1.2.3.4 error=REFUSED foo=bar";
@@ -521,7 +521,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         String value = "FOO";
@@ -562,7 +562,7 @@ public class ElasticsearchIngestNodeTest {
                         "  }" +
                         "}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         String value = "FOO";
@@ -589,7 +589,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         String value = "FOO";
@@ -617,7 +617,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         e1.setField("my_field1", "foo");
@@ -670,7 +670,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         String initialFieldName = "my_field1";
         String initialFieldValue = "foo";
@@ -708,7 +708,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         e1.setField("hostname", "FOO");
@@ -733,7 +733,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         e1.setField("my_field1", "foo");
@@ -756,7 +756,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         e1.setField("user", "foo");
@@ -782,7 +782,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         e1.setField("my_field1", "foo   bar baz");
@@ -808,7 +808,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         String[] strings = new String[]{"foo", "bar", "baz"};
         List<String> stringList = new ArrayList<>(Arrays.asList(strings));
@@ -837,7 +837,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         String value = "   foo ";
         Event e1 = new org.logstash.Event();
@@ -864,7 +864,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         String value = "Foo bar baz";
@@ -890,7 +890,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         String encodedUrl = "https%3A%2F%2Fwww.google.com";
         String expectedUrl = "https://www.google.com";
@@ -916,7 +916,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         String agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36";
         Event e1 = new org.logstash.Event();
@@ -969,7 +969,7 @@ public class ElasticsearchIngestNodeTest {
                         "    ]" +
                         "  }}";
         ElasticsearchIngestNode ingestNodeFilter = getFilter(
-                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null));
+                new ByteArrayInputStream(json.getBytes()), "my_pipeline", new ContextImpl(null, null));
 
         Event e1 = new org.logstash.Event();
         e1.setField("my_other_field", "myvalue");
