@@ -17,7 +17,7 @@ class IngestMarshaller {
     private IngestMarshaller() {
     }
 
-    static Event toEvent(IngestDocument document, Event e) {
+    static void toEvent(IngestDocument document, Event e) {
         Map<String, Object> source = document.getSourceAndMetadata();
         Map<String, Object> metadata = document.getIngestMetadata();
 
@@ -44,8 +44,6 @@ class IngestMarshaller {
                 e.setField(entry.getKey(), Valuefier.convert(entry.getValue()));
             }
         }
-
-        return e;
     }
 
     static IngestDocument toDocument(Event e) {
