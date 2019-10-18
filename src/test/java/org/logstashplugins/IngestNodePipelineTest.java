@@ -1,4 +1,4 @@
-package co.elastic.logstash.plugins.filters;
+package org.logstashplugins;
 
 import org.junit.Assert;
 import org.junit.Test;

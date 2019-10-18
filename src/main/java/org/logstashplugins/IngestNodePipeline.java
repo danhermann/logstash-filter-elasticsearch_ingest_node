@@ -1,4 +1,4 @@
-package co.elastic.logstash.plugins.filters;
+package org.logstashplugins;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

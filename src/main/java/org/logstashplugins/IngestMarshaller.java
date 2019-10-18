@@ -1,4 +1,4 @@
-package co.elastic.logstash.plugins.filters;
+package org.logstashplugins;
 
 import co.elastic.logstash.api.Event;
 import org.elasticsearch.ingest.IngestDocument;

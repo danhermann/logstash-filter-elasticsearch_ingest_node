@@ -1,4 +1,4 @@
-package co.elastic.logstash.plugins.filters;
+package org.logstashplugins;
 
 import org.joda.time.DateTime;
 import org.jruby.Ruby;
